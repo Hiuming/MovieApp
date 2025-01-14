@@ -8,13 +8,16 @@
 import Foundation
 import SwiftUI
 import Stinsen
+import SwiftMessages
 
 
 struct LoginView: View {
-    @StateObject var viewModel = LoginViewModel()
+    @EnvironmentObject var viewModel: LoginViewModel
     @EnvironmentObject private var loginCoordinator: LoginCoordinator.Router
+    @State var userName = ""
+    @State var password = ""
     var body: some View {
-        BaseView(screenName: "LoginView") {
+        BaseView(screenName: "LoginView", isLoading: viewModel.isLoading) {
             ZStack {
                 Color.primaryBlack.ignoresSafeArea()
                 VStack {
@@ -41,12 +44,18 @@ struct LoginView: View {
                 ZStack {
                     Color.primaryBlack.ignoresSafeArea()
                     VStack {
-                        LoginTile(title: "Your Email",placeHolder: "Email",isPassword: false)
-                        LoginTile(title: "Password",placeHolder: "Password", isPassword: true)
+                        LoginTile(title: "Your Email",text: $userName,
+                                  placeHolder: "Email",isPassword: false)
+                        LoginTile(title: "Password",text: $password,placeHolder: "Password", isPassword: true)
                         RememberPasswordView()
                         PrimaryButton(title: "Login",width: .infinity) {
-                            loginCoordinator.root(\.loggedIn)
-                            viewModel.getToken()
+                            viewModel.login(userName: userName, password: password) { success in
+                                if success {
+                                    loginCoordinator.root(\.loggedIn)
+                                } else {
+                                   
+                                }
+                            }
                         }
                         Spacer(minLength: 24)
                         LoginWithSocialView()
@@ -99,7 +108,7 @@ struct RememberPasswordView: View {
 
 struct LoginTile: View {
     var title: String
-    @State var text: String = ""
+    @Binding var text: String
     var placeHolder: String
     var isPassword: Bool
     var body: some View {

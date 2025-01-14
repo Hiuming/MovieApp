@@ -38,9 +38,9 @@ struct SplashScreen: View {
             }
         }
         .background(LinearGradient(gradient: Gradient(colors: [
-            .primaryBlack.opacity(0.85),
+            .primaryBlack,
             .primaryPurple.opacity(0.9),
-            .primaryBlack.opacity(0.85)
+            .primaryBlack.opacity(1)
         ]), startPoint: .topLeading, endPoint: .bottom))
         .frame(
             maxWidth: .infinity,

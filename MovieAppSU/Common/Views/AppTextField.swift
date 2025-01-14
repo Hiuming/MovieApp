@@ -32,6 +32,7 @@ struct AppTextField: View {
                     .foregroundStyle(foregroundTextColor)
                     .cornerRadius(12)
                     .focused($isTextFieldFocused)
+                    .autocapitalization(.none)
                     Spacer(minLength: 16)
                     
                 }

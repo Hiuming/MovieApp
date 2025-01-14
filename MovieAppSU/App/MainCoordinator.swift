@@ -28,10 +28,12 @@ final class MainCoordinator: NavigationCoordinatable {
             .onAppear {
                 UITabBar.appearance().backgroundColor = .black
                 UITabBar.appearance().barTintColor = .black
-                if self.isActive {
+                if UserUltis.didFirstTimeLaunched {
                     self.root(\.login)
                 } else {
                     self.root(\.onboarding)
+                    UserUltis.didFirstTimeLaunched = true
+                    
                 }
             }
             .background(.primaryBackground)
@@ -41,7 +43,7 @@ final class MainCoordinator: NavigationCoordinatable {
     func customize(_ view: AnyView) -> some View {
         sharedView(view)
     }
-
+    
 }
 
 extension MainCoordinator {

@@ -10,7 +10,7 @@ import ObjectMapper
 
 struct RequestTokenModel : Mappable {
     var success : Bool?
-    var guest_session_id : String?
+    var request_token : String?
     var expires_at : String?
 
     init?(map: Map) {
@@ -19,7 +19,7 @@ struct RequestTokenModel : Mappable {
 
     mutating func mapping(map: Map) {
         success <- map["success"]
-        guest_session_id <- map["guest_session_id"]
+        request_token <- map["request_token"]
         expires_at <- map["expires_at"]
     }
 

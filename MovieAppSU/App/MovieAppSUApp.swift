@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct MovieAppSUApp: App {
     @State var isActive: Bool = false
+    var loginViewModel: LoginViewModel = LoginViewModel()
     
     init() {
         Log.setup()
@@ -21,6 +22,7 @@ struct MovieAppSUApp: App {
                 SplashScreen(isActive: $isActive)
             } else {
                 MainCoordinator().view()
+                    .environmentObject(loginViewModel)
             }
         }
     }
