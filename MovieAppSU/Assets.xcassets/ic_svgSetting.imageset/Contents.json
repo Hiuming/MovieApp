@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Type=settings, State=Active, Direction=Default.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
