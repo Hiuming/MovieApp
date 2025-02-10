@@ -10,6 +10,7 @@ import Foundation
 
 protocol MovieRepositoryType {
     func getPopularMovies(page: Int) -> AnyPublisher<MovieListResponseModel,Error>
+    func getDiscoverMovies(page: Int) -> AnyPublisher<MovieListResponseModel,Error>
     func getMockData() -> AnyPublisher<MovieListResponseModel?, Never>
 }
 
@@ -19,6 +20,14 @@ class MovieRepository: MovieRepositoryType {
     
     func getPopularMovies(page: Int) -> AnyPublisher<MovieListResponseModel, Error> {
         apiService.request(nonBaseResponse: MovieRouter.getPopularMovies(page: page))
+            .tryMap {(response: MovieListResponseModel) in
+                return response
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func getDiscoverMovies(page: Int) -> AnyPublisher<MovieListResponseModel, Error> {
+        apiService.request(nonBaseResponse: MovieRouter.discoverMovies(page: page))
             .tryMap {(response: MovieListResponseModel) in
                 return response
             }

@@ -33,14 +33,3 @@ enum APIError: Error {
         }
     }
 }
-
-//enum StatusCode: String {
-//
-//    case success = "HTTP_OK"
-//    case emailUsed = "EMAIL_COMPANY_USED"
-//    case unAuthorized = "HTTP_UNAUTHORIZED"
-//    case invalidAccount = "INVALID_ACCOUNT"
-//    case forbidden = "HTTP_FORBIDDEN"
-//    case notFound = "HTTP_NOT_FOUND"
-//
-//}

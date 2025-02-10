@@ -17,6 +17,7 @@ class HomeViewModel: ObservableObject {
     private var bag = Set<AnyCancellable>()
     private var page: Int = 1
     @Published var poppularMovieList = [MovieModel]()
+    @Published var discoverMovies = [MovieModel]()
     @Published var radioTagProvider = [TagButtonStateProvider]()
     @LazyInjected(\.movieUseCases) var useCase
     
@@ -24,9 +25,23 @@ class HomeViewModel: ObservableObject {
         useCase.getPopularMovies(page: page)
             .trackError(errorTracker)
             .trackActivity(activityIndicator)
+            .receive(on: DispatchQueue.main)
             .sink { response  in
                 if let movieList = response.results {
                     self.poppularMovieList.append(contentsOf: movieList)
+                }
+            }
+            .store(in: &bag)
+    }
+    
+    func getDiscoverMovies() {
+        useCase.getDiscoverMovies(page: page)
+            .trackError(errorTracker)
+            .trackActivity(activityIndicator)
+            .receive(on: DispatchQueue.main)
+            .sink { response  in
+                if let movieList = response.results {
+                    self.discoverMovies.append(contentsOf: movieList)
                 }
             }
             .store(in: &bag)

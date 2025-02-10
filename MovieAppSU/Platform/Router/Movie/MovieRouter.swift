@@ -9,6 +9,7 @@ import Alamofire
 
 enum MovieRouter {
     case getPopularMovies(page: Int)
+    case discoverMovies(page: Int)
 }
 
 extension MovieRouter: APIInputBase {
@@ -20,12 +21,12 @@ extension MovieRouter: APIInputBase {
     }
     
     var url: URL {
-        return URL(string:[Common.baseURL,service,subService,path].joined(separator: "/"))!
+        return URL(string:[Common.baseURL,service,path].joined(separator: "/"))!
     }
     
     var method: HTTPMethod {
-        switch self {
-        case .getPopularMovies:
+        switch self {	
+        case .getPopularMovies, .discoverMovies:
             return .get
         default:
             return .post
@@ -40,10 +41,20 @@ extension MovieRouter: APIInputBase {
         switch self {
         case .getPopularMovies(let page):
             return [
+                "include_adult" : false,
                 "language" : "en-US",
-                "page":page
+                "page":page,
+                "sort_by": "popularity.desc"
             ]
-       
+        case .discoverMovies(let page):
+            return [
+                "include_adult" : "false",
+                "language" : "en-US",
+                "page":page,
+                "include_video" : "false",
+                "sort_by": "popularity.desc",
+            ]
+            
         }
     }
     
@@ -52,17 +63,22 @@ extension MovieRouter: APIInputBase {
     }
     
     var service: String {
-        return "movie"
+        switch self {
+        case .getPopularMovies:
+            return "movie"
+        case .discoverMovies:
+            return "discover"
+        }
     }
     
-    var subService: String {
-       return ""
-    }
+    
     
     var path: String {
         switch self {
         case .getPopularMovies:
             return "popular"
+        case .discoverMovies:
+            return "movie"
         }
     }
 }

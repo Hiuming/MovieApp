@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import Foundation
+import Combine
 
 struct SearchBar: View {
     @Binding var searchText: String
@@ -14,7 +15,8 @@ struct SearchBar: View {
     var foregroundColor: Color = .primary
     var borderColor: Color = .primaryBlack
     var foregroundTextColor: Color = .primaryBlack
-    var action: ()->()
+    private let searchTextPublisher = PassthroughSubject<String, Never>()
+    var action: ((String)->Void)
     var onCancel: ()->()
     private let placeHolder = "Type something here ..."
     @FocusState private var isTextFieldFocused: Bool
@@ -31,8 +33,11 @@ struct SearchBar: View {
                     .foregroundStyle(foregroundTextColor)
                     .cornerRadius(12)
                     .onChange(of: searchText) { oldValue, newValue in
-                        action()
+                        searchTextPublisher.send(newValue)
                     }
+                    .onReceive(searchTextPublisher.debounce(for: .milliseconds(500), scheduler: DispatchQueue.main), perform: { text in
+                        action(text)
+                    })
                     .padding(.leading,10)
                     .focused($isTextFieldFocused)
                 }
@@ -60,7 +65,7 @@ struct SearchBar: View {
 #Preview {
     @Previewable @State var searchText: String = ""
     @Previewable @State var hasCancel: Bool = true
-    SearchBar(searchText: $searchText, hasCancel: hasCancel) {
+    SearchBar(searchText: $searchText, hasCancel: hasCancel) {_ in 
         
     } onCancel: {
         

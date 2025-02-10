@@ -26,16 +26,17 @@ struct HomeView: View {
                             Spacer(minLength: 60)
                             HomeHeaderView()
                                 .padding(.horizontal, 20)
-                            SearchBar(searchText: $searchText,hasCancel: false,borderColor: .primaryWhite,foregroundTextColor: .primaryWhite) {
+                            SearchBar(searchText: $searchText,hasCancel: false,borderColor: .primaryWhite,foregroundTextColor: .primaryWhite) { text in
+                                
                             } onCancel: {
                                 
                             }
                             .padding(.horizontal, 18)
-                            HomeSuggestMovie(movie: viewModel.poppularMovieList.first,viewModel: viewModel)
+                            HomeSuggestMovie(movie: viewModel.discoverMovies.first,viewModel: viewModel)
                             Spacer(minLength: 10)
                             ScrollView(.horizontal) {
                                 LazyHStack(spacing: 0) {
-                                    ForEach(viewModel.poppularMovieList) { movie in
+                                    ForEach(viewModel.discoverMovies) { movie in
                                         MovieTiles(movie: movie,genre: viewModel.getGenre(movie: movie))
                                     }
                                 }
@@ -55,6 +56,7 @@ struct HomeView: View {
                             viewModel.setMock()
                         } else {
                             viewModel.getPopularMovies()
+                            viewModel.getDiscoverMovies()
                         }
                     }
                     
@@ -93,12 +95,13 @@ struct HomeHeaderView: View {
 struct HomeSuggestMovie: View {
     var movie: MovieModel?
     @ObservedObject var viewModel: HomeViewModel
-    @State var selectTag: [Bool] = [true,false,false]
     var body: some View {
         ZStack {
             if let url = Common.getImage(path: movie?.backdrop_path ?? "") {
                 AsyncImage(url: url) { image in
-                    image.image?.resizable()
+                    image.image?
+                        .resizable()
+                        .skeleton(with: image.image == nil)
                 }
                 .mask {
                     VStack(spacing: 0) {
@@ -149,9 +152,11 @@ struct HomeSuggestMovie: View {
                             
                         }
                         Spacer()
-                        PrimaryButton(title: "Watch Now") {
-                            
-                        }
+                        PrimaryButton(
+                            title: "Watch Now",onPress:  {
+                                
+                            }, backgroundColor: .clear,borderWidth: 2.0, borderColor: .primaryPurple,
+                            textColor: .primaryPurple)
                         .padding(.trailing,20)
                         .padding(.vertical,10)
                     }
@@ -174,7 +179,9 @@ struct MovieTiles: View  {
         VStack(alignment: .leading) {
             if let url = Common.getImage(path: movie?.backdrop_path ?? "",width: 500) {
                 AsyncImage(url: url) { image in
-                    image.image?.resizable()
+                    image.image?
+                        .resizable()
+                        .skeleton(with: image.image == nil)
                 }
                 .frame(height: 200)
                 .cornerRadius(10)
@@ -213,11 +220,13 @@ struct MovieVerticalTiles: View {
     var genre: [String]
     var body: some View {
         HStack {
-            if let url = Common.getImage(path: movie?.backdrop_path ?? "",width: 400) {
+            if let url = Common.getImage(path: movie?.backdrop_path ?? "",width: 500) {
                 AsyncImage(url: url) { image in
-                    image.image?.resizable()
+                    image.image?
+                        .resizable()
+                        .skeleton(with: image.image == nil)
                 }
-                .frame(height: 135)
+                .frame(height: 128)
                 .frame(idealWidth: 100)
                 .cornerRadius(10)
                 .aspectRatio(contentMode: .fit)
@@ -250,7 +259,7 @@ struct MovieVerticalTiles: View {
             }
         }
         .padding(.leading, 18)
-        .frame(idealHeight: 135)
+        .frame(idealHeight: 130)
     }
 }
 
@@ -263,6 +272,7 @@ struct PopularMovieList: View {
                 MovieVerticalTiles(movie: movie, genre: viewModel.getGenre(movie: movie))
                     .padding(.bottom,20)
             }
+            Spacer(minLength: 80)
         }
     }
 }

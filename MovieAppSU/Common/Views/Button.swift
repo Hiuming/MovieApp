@@ -14,17 +14,24 @@ struct PrimaryButton: View {
     var height: CGFloat = 56.0
     var onPress: () -> Void
     var backgroundColor: Color = .primaryPurple
+    var borderWidth: CGFloat = 1.0
+    var borderColor: Color = .primaryPurple
+    var textColor: Color = .primaryWhite
     var body: some View {
         Button(action: onPress) {
             ZStack {
                 backgroundColor
                 Text(title)
-                    .foregroundStyle(Color.primaryWhite)
+                    .foregroundStyle(textColor)
                     .font(.buttonTitle)
             }
         }
         .frame(maxWidth: width, maxHeight: height)
         .cornerRadius(height/2)
+        .overlay {
+            RoundedRectangle(cornerRadius: height/2)
+                .stroke(borderColor, lineWidth: borderWidth)
+        }
         
     }
 }

@@ -11,6 +11,7 @@ import Combine
 
 protocol MovieUseCasesType {
     func getPopularMovies(page: Int) -> AnyPublisher<MovieListResponseModel,Error>
+    func getDiscoverMovies(page: Int) -> AnyPublisher<MovieListResponseModel,Error>
     func getMockData() -> AnyPublisher<MovieListResponseModel?, Never>
 }
 
@@ -22,5 +23,9 @@ class MovieUseCases: MovieUseCasesType {
     
     func getMockData() -> AnyPublisher<MovieListResponseModel?, Never> {
         repository.getMockData()
+    }
+    
+    func getDiscoverMovies(page: Int) -> AnyPublisher<MovieListResponseModel,Error> {
+        repository.getDiscoverMovies(page: page)
     }
 }

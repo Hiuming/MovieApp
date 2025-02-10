@@ -23,6 +23,6 @@ final class HomeCoordinator: NavigationCoordinatable {
 
 extension HomeCoordinator {
     @ViewBuilder func makeStart() -> some View {
-        HomeView(mockView: true)
+        HomeView(mockView: false)
     }
 }
